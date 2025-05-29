@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Skill Tree Visualizer</title>
+        <link rel="stylesheet" href="style.css">
+	</head>
+    <script src="scripts/data.js"></script>
+    <script src="scripts/sidebar.js"></script>
+    <script src="scripts/render.js"></script>
+    <script src="scripts/main.js"></script>
+	<body>
+		<div class="container">
+			<div class="sidebar">
+				<form class="input-form" method="post" id="skill-form">
+					<div style="display: flex;gap: 8px;align-items: center;margin-bottom: 18px;">
+						<button type="submit" class="solve-btn">Estimate</button>
+						<button type="button" id="reset-btn" class="reset-btn" title="Reset">
+							&#10006;
+						</button>
+					</div>
+					<input type="hidden" name="root_id" id="root_id" value="" />
+					<div id="root-buttons"></div>
+					<input
+						type="text"
+						id="skill-search"
+						class="search-box"
+						placeholder="Search skill name..."
+						oninput="filterSkills()"
+					/>
+					<div id="categories-container"></div>
+				</form>
+			</div>
+			<div class="main">
+				<div class="img-container" style="position: relative">
+					<div id="svg-container"></div>
+					<div id="warning-area"></div>
+					<div id="level-indicator"></div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
