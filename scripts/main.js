@@ -194,7 +194,7 @@ function updateWarnings() {
 	let disconnected = false;
 	if (ownedNodeIds.length > 0) {
 		const ownedSet = new Set(ownedNodeIds);
-		const queue = ownedNodeIds.filter((id) => ROOT_NODES.includes(id));
+		const queue = [ownedNodeIds[0]];
 		const visited = new Set(queue);
 		while (queue.length) {
 			const curr = queue.shift();
