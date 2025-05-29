@@ -233,23 +233,46 @@ function updateWarnings() {
 	}
 }
 
+function importFromHex(hex) {
+	const bits = [];
+	
+	for (let i = 0; i < hex.length; i++) {
+		const nibble = parseInt(hex[hex.length - 1 - i], 16);
+		for (let b = 0; b < 4; b++) {
+			bits[i * 4 + b] = (nibble >> b) & 1;
+		}
+	}
+
+	ownedNodeIds = [];
+	for (let i = 0; i < NODE_COUNT; i++) {
+		if (bits[i]) {
+			ownedNodeIds.push(i + 1);
+		}
+	}
+
+	updateSVG();
+}
+
 function updateHashFromOwnedNodes(ownedNodeIds = []) {
-	var bits = [];
-	for (var i = 0; i < NODE_COUNT; i++) {
-		bits[i] = ownedNodeIds.includes(i + 1) ? "1" : "0";
+	const bits = new Array(NODE_COUNT).fill("0");
+
+	for (const id of ownedNodeIds) {
+		if (id >= 1 && id <= NODE_COUNT) {
+			bits[id - 1] = "1";
+		}
 	}
-	var hex = "";
-	for (var i = 0; i < bits.length; i += 4) {
-		var nibble = bits
-			.slice(i, i + 4)
-			.reverse()
-			.join("");
-		hex = parseInt(nibble.padEnd(4, "0"), 2).toString(16) + hex;
+
+	let hex = "";
+	for (let i = 0; i < bits.length; i += 4) {
+		const nibbleBits = bits.slice(i, i + 4).reverse().join("");
+		const nibble = parseInt(nibbleBits, 2).toString(16);
+		hex = nibble + hex;
 	}
-	hex = hex.replace(/^0+/, "");
-	if (hex === "") hex = "0";
+
+	hex = hex.replace(/^0+/, "") || "0";
 	window.location.hash = hex;
 }
+
 
 document.addEventListener("DOMContentLoaded", function () {
 	var sections = document.querySelectorAll(".sliders-content");
@@ -276,21 +299,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			}, 500);
 		});
 	});
-	function importFromHex(hex) {
-		var maxId = Math.max(...Object.keys(SKILL_GRAPH).map(Number));
-		var bits = [];
-		for (var i = 0; i < hex.length; i++) {
-			var nibble = parseInt(hex[hex.length - 1 - i], 16);
-			for (var b = 0; b < 4; b++) {
-				bits[i * 4 + b] = (nibble >> b) & 1 ? 1 : 0;
-			}
-		}
-		ownedNodeIds = [];
-		for (var i = 0; i < maxId; i++) {
-			if (bits[i]) ownedNodeIds.push(i + 1);
-		}
-		updateSVG();
-	}
+
 	if (window.location.hash.length > 1) {
 		var hashHex = window.location.hash.slice(1);
 		if (/^[0-9a-fA-F]+$/.test(hashHex)) {
